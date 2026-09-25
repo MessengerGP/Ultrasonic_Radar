@@ -15,7 +15,7 @@ void GPIOA_setup(void)
 	GPIOA_AHB -> DEN |= (1 << 0) | (1 << 1);
 }
 
-void UART_setup(void)
+void initUART(void)
 {
 	GPIOA_setup();
 	
@@ -52,11 +52,14 @@ void UART_sendString(char *str)
 
 void UART0_Handler(void)
 {
-	if(UART0 -> MIS & (1 << 4))
-	{
+	if(UART0 -> MIS & (1 << 4)){
 		holdChar = UART0 -> DR & 0xFF;
 		hasChar = true;
-		UART_sendChar(holdChar);
-		UART0 -> ICR |= (1 << 4);
+		
+		if(holdChar != 27){ //dont echo ESC
+			UART_sendChar(holdChar);
+		}
+
+		UART0 -> ICR = (1 << 4);
 	}
 }

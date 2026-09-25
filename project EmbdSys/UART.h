@@ -8,7 +8,7 @@ extern volatile bool hasChar;
 
 void GPIOA_setup(void);
 
-void UART_setup(void);
+void initUART(void);
 
 void UART_sendChar(char c);
 

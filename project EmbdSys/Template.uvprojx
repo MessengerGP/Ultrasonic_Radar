@@ -439,6 +439,46 @@
               <FileType>4</FileType>
               <FilePath>.\ES_Lib01-0.lib</FilePath>
             </File>
+            <File>
+              <FileName>BUZZER.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BUZZER.c</FilePath>
+            </File>
+            <File>
+              <FileName>BUZZER.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\BUZZER.h</FilePath>
+            </File>
+            <File>
+              <FileName>POT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\POT.c</FilePath>
+            </File>
+            <File>
+              <FileName>POT.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\POT.h</FilePath>
+            </File>
+            <File>
+              <FileName>SERVO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SERVO.c</FilePath>
+            </File>
+            <File>
+              <FileName>SERVO.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\SERVO.h</FilePath>
+            </File>
+            <File>
+              <FileName>ULTRASONIC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\ULTRASONIC.c</FilePath>
+            </File>
+            <File>
+              <FileName>ULTRASONIC.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\ULTRASONIC.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

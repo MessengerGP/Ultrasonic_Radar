@@ -28,7 +28,7 @@ void set_bounds(char key)
 {
 	if(state == IDLE)
 	{
-		if(key == 'l')//ASCII for '<'
+		if(key == 60)//ASCII for '<' = 60
 		{
 			minAngle++;
 			if(minAngle > 180)
@@ -37,7 +37,7 @@ void set_bounds(char key)
 			}
 			ES_printf(0, "MIN ANGLE RANGE: %d\nMAX ANGLE RANGE: %d\n\n--------------------------\n\n", minAngle, maxAngle);
 		}
-		else if(key == 'h')//ASCII for '>'
+		else if(key == 62)//ASCII for '>' = 62
 		{
 			maxAngle--;
 			if(maxAngle < 0)
