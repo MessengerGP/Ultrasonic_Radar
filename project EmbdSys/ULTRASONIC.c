@@ -58,21 +58,21 @@ void TIMER0A_Handler(void)
 {
 	uint32_t now;
 	
-	TIMER0 -> ICR = (1 << 2);                       // clear capture event flag
-	now = TIMER0 -> TAR & 0xFFFFFF;                 // captured time (24-bit)
+	TIMER0 -> ICR = (1 << 2);                     
+	now = TIMER0 -> TAR & 0xFFFFFF;               
 	
-	if(GPIOL -> DATA & (1 << 4))                    // PL4 high -> this was the rising edge
+	if(GPIOL -> DATA & (1 << 4))                
 	{
 		echoStart = now;
 	}
-	else                                            // PL4 low -> falling edge, pulse finished
+	else                                           
 	{
-		echoWidth = (now - echoStart) & 0xFFFFFF;   // width in timer counts (handles wrap)
+		echoWidth = (now - echoStart) & 0xFFFFFF;   
 		echoReady = true;
 	}
 }
 
 uint32_t ultrasonic_getCM(void)
 {
-	return echoWidth / 928;                         // 16 counts/us x 58 us/cm
+	return echoWidth / 928; // 16 counts/us x 58 us/cm
 }

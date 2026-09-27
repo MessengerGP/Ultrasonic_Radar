@@ -1,7 +1,7 @@
 #include "UART.h"
 
-volatile char holdChar;
-volatile bool hasChar = false; 
+volatile char holdingLastPressed;
+volatile bool hasButtonPressed = false; 
 
 void GPIOA_setup(void)
 {
@@ -53,11 +53,11 @@ void UART_sendString(char *str)
 void UART0_Handler(void)
 {
 	if(UART0 -> MIS & (1 << 4)){
-		holdChar = UART0 -> DR & 0xFF;
-		hasChar = true;
+		holdingLastPressed = UART0 -> DR & 0xFF;
+		hasButtonPressed = true;
 		
-		if(holdChar != 27){ //dont echo ESC
-			UART_sendChar(holdChar);
+		if(holdingLastPressed != 27){ //dont echo ESC
+			UART_sendChar(holdingLastPressed);
 		}
 
 		UART0 -> ICR = (1 << 4);

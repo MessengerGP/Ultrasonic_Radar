@@ -17,6 +17,6 @@ void ultrasonic_trigger(void);
 
 void TIMER0A_Handler(void);
 
-uint32_t ultrasonic_getCM(void);
+uint32_t ultrasonic_getCM(void); //getter function
 
 #endif

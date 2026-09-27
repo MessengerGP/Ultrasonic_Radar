@@ -7,6 +7,9 @@
 #include "POT.h"
 #include "SERVO.h"
 #include "ULTRASONIC.h"
+#include "CONTROLLER.h"
+#include "TICK.h"
+
 
 //run at 15 micro seconds not 10
 // -----------------Main function-------------------
@@ -20,6 +23,9 @@ int main(void)
 	initADC();
 	initSERVO();
 	initULTRASONIC();
+	initCONTROLLER();
+	initTICK();
+	
 	initSPI();
 	initLCD();
 
@@ -28,45 +34,55 @@ int main(void)
 	
 while(true)
 {
-    if(hasChar)
+    if(hasButtonPressed)
     {
-        hasChar = false;
+        hasButtonPressed = false;
 
-        if(holdChar == 27){
+        if(holdingLastPressed == 27){
             ES_printf(0, "ESC was entered.\nState received: IDLE\n\n--------------------------\n\n");
 						buzzer_beep(150);
         }
-        else if(holdChar == 'a' || holdChar == 'A'){
+        else if(holdingLastPressed == 'a' || holdingLastPressed == 'A'){
             ES_printf(0, " was entered.\nState received: AUTOMATIC\n\n--------------------------\n\n");
         }
-        else if(holdChar == 'm' || holdChar == 'M'){
+        else if(holdingLastPressed == 'm' || holdingLastPressed == 'M'){
             ES_printf(0, " was entered.\nState received: MANUAL\n\n--------------------------\n\n");
         }
-				else if(holdChar == 'p' || holdChar == 'P'){
+				else if(holdingLastPressed == 'p' || holdingLastPressed == 'P'){
 						ADC_start();
 						while(!adcReady);                               // wait for ADC0SS2_Handler
 						adcReady = false;
 						ES_printf(0, "\nPot: %d   Angle: %d\n", potValue, potValue * 180 / 4095);
 					  servo_setAngle(potValue * 180 / 4095);          // move servo to pot angle
 				}
-				else if(holdChar == 'd' || holdChar == 'D'){
+				else if(holdingLastPressed == 'd' || holdingLastPressed == 'D'){
 					echoReady = false;
 					ultrasonic_trigger();
 					ES_msDelay(60);                                 // give the echo time to return
     
 					if(echoReady){
-						ES_printf(0, "\nDistance: %d cm\n", ultrasonic_getCM());
+						ES_printf(0, "\nDistance: %d cm\n\n--------------------------\n\n", ultrasonic_getCM());
 					}
 					else{
 					ES_printf(0, "\nNo echo\n");
 					}
 				}
+				   else if(holdingLastPressed == 't' || holdingLastPressed == 'T'){
+       ES_printf(0, "\nTicks: %d ms\n", msTick);
+   }
 
-        change_state(holdChar);
-        set_bounds(holdChar);
+        change_state(holdingLastPressed);
+        set_bounds(holdingLastPressed);
     }
+		
+
+		if(state == MANUAL)
+		{
+		manual_run();
+			
+		}
+
 }
-	
   return 0;
 }
 

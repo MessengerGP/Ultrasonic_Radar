@@ -1,10 +1,13 @@
 #include "RADAR.h"
 
+#include "POT.h"
+#include "SERVO.h"
+#include "ULTRASONIC.h"
+
 
 int state = IDLE;
 int minAngle = 0;
 int maxAngle = 180;
-volatile int angle;
 
 
 void change_state(char c)
@@ -66,5 +69,29 @@ void manual_state(void)
 {
 	state = MANUAL;
 	//angle will require inputs for lowering to min and raising to max ( < and > )
+}
+
+void manual_run(void)
+{
+	int angle;
+	
+	ADC_start();
+	while(!adcReady);
+	adcReady = false;
+	
+	angle = potValue * 180 / 4095;
+	servo_setAngle(angle);
+	
+	echoReady = false;
+	ultrasonic_trigger();
+	ES_msDelay(60);
+	
+	if(echoReady){
+		ES_printf(0, "\rAngle: %3d Degrees		Distance: %3d cm		", angle, ultrasonic_getCM());
+	}
+	else{
+		ES_printf(0, "\rAngle: %3d Degrees		Distance: ------		", angle);
+	}
+	
 }
 

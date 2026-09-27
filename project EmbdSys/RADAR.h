@@ -11,7 +11,6 @@
 extern int state;
 extern int minAngle;
 extern int maxAngle;
-extern volatile int angle;
 
 
 void change_state(char c);
@@ -23,6 +22,8 @@ void idle_state(void);
 void auto_state(void);
 
 void manual_state(void);
+
+void manual_run(void);
 
 #endif
 

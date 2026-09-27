@@ -479,6 +479,26 @@
               <FileType>5</FileType>
               <FilePath>.\ULTRASONIC.h</FilePath>
             </File>
+            <File>
+              <FileName>CONTROLLER.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CONTROLLER.c</FilePath>
+            </File>
+            <File>
+              <FileName>CONTROLLER.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CONTROLLER.h</FilePath>
+            </File>
+            <File>
+              <FileName>TICK.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\TICK.c</FilePath>
+            </File>
+            <File>
+              <FileName>TICK.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\TICK.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

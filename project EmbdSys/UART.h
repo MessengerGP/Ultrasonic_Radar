@@ -3,8 +3,8 @@
 
 #include "ES.h"
 
-extern volatile char holdChar;
-extern volatile bool hasChar; 
+extern volatile char holdingLastPressed;
+extern volatile bool hasButtonPressed; 
 
 void GPIOA_setup(void);
 
