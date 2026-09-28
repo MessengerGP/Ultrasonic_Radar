@@ -10,8 +10,8 @@ void GPIOD_setup(void)
 	GPIOD_AHB -> DEN |= (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3);
 	GPIOD_AHB -> PUR |= (1 << 3);
 	GPIOD_AHB -> AFSEL |= (1 << 1) | (1 << 2) | (1 << 3);
-	GPIOD_AHB -> PCTL &= ~0xFFF0;
-	GPIOD_AHB -> PCTL |= 0xFFF0;
+	GPIOD_AHB -> PCTL &= ~((0xF << 4) | (0xF << 8) | (0xF << 12));
+	GPIOD_AHB -> PCTL |= (0xF << 4) | (0xF << 8) | (0xF << 12);
 }
 
 
@@ -22,15 +22,10 @@ void initSPI(void)
 	SYSCTL -> RCGCSSI |= (1 << 2);
 	while((SYSCTL -> PRSSI & (1 << 2)) == 0);
 	
-	SSI2 -> CR1 &= ~((1 << 1) | (1 << 2)); //disable SSI, ms to master
-	
-	SSI2 -> CPSR = 4; //CPSDVSR=4 -> baud = 16MHz / 4 = 4MHz
-
-	SSI2 -> CR0 = 0xC7; // SRC=0, SPH=1, SP0=1, FRF=00 (Freescale), DDS=0x7 (8bit)
-	//SRC, spi mode, desired clock freq/polarity (SPH and SPO), protocol mode (FRF), data size (DSS)
-
-	
-	SSI2 -> CR1 |= (1 << 1); //enable SSI
+	SSI2 -> CR1 &= ~((1 << 1) | (1 << 2)); 
+	SSI2 -> CPSR = 4; 												
+	SSI2 -> CR0 = (1 << 7) | (1 << 6) | (7 << 0);										
+	SSI2 -> CR1 |= (1 << 1); 
 }
 
 

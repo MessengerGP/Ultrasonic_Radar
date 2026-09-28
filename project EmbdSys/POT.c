@@ -1,54 +1,60 @@
 #include "POT.h"
 
 volatile uint16_t potValue = 0;
+volatile uint16_t joyX = 0;					//AIN1, PE2 
+volatile uint16_t joyY = 0;					//AIN2, PE1
 volatile bool adcReady = false;
 
 void GPIOE_setup(void)
 {
-	SYSCTL -> RCGCGPIO |= (1 << 4);                 // Port E clock
-	while((SYSCTL -> PRGPIO & (1 << 4)) == 0);      // wait until ready
+	SYSCTL -> RCGCGPIO |= (1 << 4); 
+	while((SYSCTL -> PRGPIO & (1 << 4)) == 0);
 	
-	GPIOE_AHB -> AMSEL |= (1 << 3);                 // PE3 analog on
-	GPIOE_AHB -> DIR &= ~(1 << 3);                  // PE3 input
-	GPIOE_AHB -> AFSEL |= (1 << 3);                 // alternate function
-	GPIOE_AHB -> DEN &= ~(1 << 3);                  // digital off
+	//CHANGED: PE1 (Y), PE2 (X), PE3 (pot) all analog inputs
+	GPIOE_AHB -> AMSEL |= (1 << 1) | (1 << 2) | (1 << 3);       
+	GPIOE_AHB -> DIR &= ~((1 << 1) | (1 << 2) | (1 << 3));  
+	GPIOE_AHB -> AFSEL |= (1 << 1) | (1 << 2) | (1 << 3);  
+	GPIOE_AHB -> DEN &= ~((1 << 1) | (1 << 2) | (1 << 3));      
 }
 
 void ADC_setup(void)
 {
 	GPIOE_setup();
 	
-	SYSCTL -> RCGCADC |= (1 << 0);                  // ADC0 clock
-	while((SYSCTL -> PRADC & (1 << 0)) == 0);       // wait for ADC0 (was PRGPIO)
+	SYSCTL -> RCGCADC |= (1 << 0);                  
+	while((SYSCTL -> PRADC & (1 << 0)) == 0);       
 	
-	ADC0 -> CC = 0x1;                               // ADC clock from 16 MHz PIOSC
+	ADC0 -> CC = (1 << 0);															// ADC uses the 16 MHz internal clock
+
 }
 
 void initADC(void)
 {
 	ADC_setup();
 	
-	ADC0 -> ACTSS &= ~(1 << 2);                     // disable SS2 while configuring
-	ADC0 -> EMUX &= ~0xF00;                         // SS2 trigger = processor (software)
-	ADC0 -> SSMUX2 = 0;                             // sample 0 = AIN0 (PE3, pot)
-	ADC0 -> SSCTL2 = 0x6;                           // sample 0: IE0 + END0
+	ADC0 -> ACTSS &= ~(1 << 2);
+	ADC0 -> EMUX &= ~((1 << 8) | (1 << 9) | (1 << 10) | (1 << 11));
 	
-	ADC0 -> ISC = (1 << 2);                         // clear old SS2 flag
-	ADC0 -> IM |= (1 << 2);                         // unmask SS2 interrupt
-	NVIC -> ISER[0] |= (1 << 16);                   // enable IRQ 16 (ADC0 SS2)
+	//new with joystick
+	ADC0 -> SSMUX2 = (0 << 0) | (1 << 4) | (2 << 8);		// read pot, then joystick X, then joystick Y
+	ADC0 -> SSCTL2 = (1 << 9) | (1 << 10);							//END (bit 9) + interrupt (bit 10)
 	
-	ADC0 -> ACTSS |= (1 << 2);                      // enable SS2
+	ADC0 -> ISC = (1 << 2);                         		// clear any old interrupt
+	ADC0 -> IM |= (1 << 2);                         		// allow the interrupt
+	NVIC -> ISER[0] |= (1 << 16);                   		// turn on ADC interrupt (IRQ 16)
+	
+	ADC0 -> ACTSS |= (1 << 2);
 }
 
+void ADC_start(void)	{	 ADC0 -> PSSI = (1 << 2);	}		// take one set of readings (pot, X, Y)
 
-void ADC_start(void){	 ADC0 -> PSSI = (1 << 2);	} // start one SS2 conversion
-
-
-void ADC0SS2_Handler(void) // SS2: up to 4 samples, FIFO = 4. USING 4 TO ADD JOYSTICK X\Y LATER
+void ADC0SS2_Handler(void)
 {
-	potValue = ADC0 -> SSFIFO2 & 0xFFF;             // 12-bit result
-	adcReady = true;                                // tell main a reading is ready
-	ADC0 -> ISC = (1 << 2);                         // clear SS2 interrupt
+	// results come out in the same order they were read
+	potValue = ADC0 -> SSFIFO2 & 0xFFF;             // pot        (PE3)
+	joyX     = ADC0 -> SSFIFO2 & 0xFFF;             // joystick X (PE2)
+	joyY     = ADC0 -> SSFIFO2 & 0xFFF;             // joystick Y (PE1)
+	
+	adcReady = true;                               
+	ADC0 -> ISC = (1 << 2);     
 }
-
-//AIN0 = PE3

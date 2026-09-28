@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\Template.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\Template.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Sun Sep 27 15:41:10 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Mon Sep 28 15:20:40 2026
 <BR><P>
 <H3>Maximum Stack Usage =        344 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1809,7 +1809,7 @@ Global Symbols
 
 <P><STRONG><a name="[140]"></a>__semihosting_library_function</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, indicate_semi.o(.text), UNUSED)
 
-<P><STRONG><a name="[1a]"></a>ADC0SS2_Handler</STRONG> (Thumb, 50 bytes, Stack size 0 bytes, pot.o(.text.ADC0SS2_Handler))
+<P><STRONG><a name="[1a]"></a>ADC0SS2_Handler</STRONG> (Thumb, 82 bytes, Stack size 0 bytes, pot.o(.text.ADC0SS2_Handler))
 <BR>[Address Reference Count : 1]<UL><LI> startup_tm4c129.o(RESET)
 </UL>
 <P><STRONG><a name="[e0]"></a>ADC_setup</STRONG> (Thumb, 56 bytes, Stack size 8 bytes, pot.o(.text.ADC_setup))
@@ -1842,6 +1842,7 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[109]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;manual_run
 <LI><a href="#[108]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;set_bounds
+<LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;change_state
 <LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
@@ -1891,7 +1892,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIMER0_setup
 </UL>
 
-<P><STRONG><a name="[50]"></a>GPIOM_Handler</STRONG> (Thumb, 330 bytes, Stack size 16 bytes, controller.o(.text.GPIOM_Handler))
+<P><STRONG><a name="[50]"></a>GPIOM_Handler</STRONG> (Thumb, 410 bytes, Stack size 16 bytes, controller.o(.text.GPIOM_Handler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = GPIOM_Handler &rArr; UART_sendChar
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_sendChar
@@ -1969,12 +1970,14 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;buzzer_beep
 </UL>
 
-<P><STRONG><a name="[ed]"></a>change_state</STRONG> (Thumb, 84 bytes, Stack size 16 bytes, radar.o(.text.change_state))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = change_state
+<P><STRONG><a name="[ed]"></a>change_state</STRONG> (Thumb, 178 bytes, Stack size 16 bytes, radar.o(.text.change_state))
+<BR><BR>[Stack]<UL><LI>Max Depth = 304 + Unknown Stack Size
+<LI>Call Chain = change_state &rArr; ES_printf &rArr; vsprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;manual_state
 <LI><a href="#[ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;auto_state
 <LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;idle_state
+<LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ES_printf
 </UL>
 <BR>[Called By]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -1983,7 +1986,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;change_state
 </UL>
 
-<P><STRONG><a name="[f1]"></a>initADC</STRONG> (Thumb, 116 bytes, Stack size 8 bytes, pot.o(.text.initADC))
+<P><STRONG><a name="[f1]"></a>initADC</STRONG> (Thumb, 120 bytes, Stack size 8 bytes, pot.o(.text.initADC))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = initADC &rArr; ADC_setup
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_setup
@@ -2057,7 +2060,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[bb]"></a>main</STRONG> (Thumb, 586 bytes, Stack size 32 bytes, main.o(.text.main))
+<P><STRONG><a name="[bb]"></a>main</STRONG> (Thumb, 594 bytes, Stack size 32 bytes, main.o(.text.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 344 + Unknown Stack Size
 <LI>Call Chain = main &rArr; manual_run &rArr; ES_printf &rArr; vsprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
@@ -2086,7 +2089,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry_main
 </UL>
 
-<P><STRONG><a name="[109]"></a>manual_run</STRONG> (Thumb, 162 bytes, Stack size 24 bytes, radar.o(.text.manual_run))
+<P><STRONG><a name="[109]"></a>manual_run</STRONG> (Thumb, 450 bytes, Stack size 24 bytes, radar.o(.text.manual_run))
 <BR><BR>[Stack]<UL><LI>Max Depth = 312 + Unknown Stack Size
 <LI>Call Chain = manual_run &rArr; ES_printf &rArr; vsprintf &rArr; _printf_char_common &rArr; __printf
 </UL>

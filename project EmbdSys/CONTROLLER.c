@@ -1,15 +1,13 @@
 #include "CONTROLLER.h"
 #include "TICK.h"		//uses msTick
 
-
 #define BUTTON_WAIT 200
 
 static uint32_t lastPressTime = 0;
 
 
-void GPIOM_setup(void) // bit 11
+void GPIOM_setup(void)
 {
-	// Port M 0-6 (7 total)
 	SYSCTL -> RCGCGPIO |= (1 << 11);
 	while((SYSCTL -> PRGPIO & (1 << 11)) == 0);
 	
@@ -37,38 +35,40 @@ void GPIOM_Handler(void)
 	
 	if((msTick - lastPressTime) >= BUTTON_WAIT)
 	{
-		if(GPIOM -> MIS & (1 << 0)){                  // button A
+		if(GPIOM -> MIS & (1 << 0)){                  // button A or Key A
 			holdingLastPressed = 'a';                   // AUTOMATIC
 				pressed = true;
 		}
-		else if(GPIOM -> MIS & (1 << 1)){             // button B
+		else if(GPIOM -> MIS & (1 << 1)){             // button B or Key <
 			holdingLastPressed = '<';                   // min angle
 			pressed = true;
 		}
-		else if(GPIOM -> MIS & (1 << 2)){             // button C
+		else if(GPIOM -> MIS & (1 << 2)){             // button C or Key M
 			holdingLastPressed = 'm';                   // MANUAL
 			pressed = true;
 		}
-		else if(GPIOM -> MIS & (1 << 3)){             // button D
+		else if(GPIOM -> MIS & (1 << 3)){             // button D or Key >
 			holdingLastPressed = '>';                   // max angle
 			pressed = true;
 		}
-		else if(GPIOM -> MIS & (1 << 6)){             // joystick button 
-			holdingLastPressed = 27;                    // ESC
+		else if(GPIOM -> MIS & (1 << 6)){             // joystick button or Key ESC
+			holdingLastPressed = 27;                    // IDLE
 			pressed = true;
 		}
-	
-		// PM4 (E) not being used
-	
-		// PM5 (F) not being used
+		else if(GPIOM -> MIS & (1 << 4)){             // button E or Key J
+			holdingLastPressed = 'j';                   // switch
+			pressed = true;
+		}
+		else if(GPIOM -> MIS & (1 << 5)){             // button F or Key D
+			holdingLastPressed = 'd';                   // echo
+			pressed = true;
+		}
 	
 		if(pressed){
 			lastPressTime = msTick; 
 			hasButtonPressed = true;                    // hand it to main
 		
-			if(holdingLastPressed != 27){    // echo like the keyboard, except ESC
-				UART_sendChar(holdingLastPressed);
-			}
+			if(holdingLastPressed != 27){		UART_sendChar(holdingLastPressed);		}	// echo like the keyboard, except ESC
 		}
 	}
 	

@@ -9,20 +9,28 @@ int state = IDLE;
 int minAngle = 0;
 int maxAngle = 180;
 
+static bool joystickCTRL = false;
+static int servoPOS = 90;			// to remember angle when swapping back and forth
+
+
 
 void change_state(char c)
 {
-	if(c == 27)//esc = ASCII value of 27
+	if			(c == 27)										{		idle_state();		}	
+	else if	(c == 'a' || c == 'A')			{		auto_state();		}
+	else if	(c == 'm' || c == 'M')			{		manual_state();	}
+	else if	(c == 'j' || c == 'J')
 	{
-		idle_state();
-	}
-	else if(c == 'a' || c == 'A')
-	{
-		auto_state();
-	}
-	else if(c == 'm' || c == 'M')
-	{
-		manual_state();
+		if(!joystickCTRL)
+		{
+			joystickCTRL = true;
+			ES_printf(0, "\nControl: JOYSTICK\n");
+		}
+		else
+		{
+			joystickCTRL = false;
+			ES_printf(0, "\nControl: POTENTIOMETER\n");
+		}
 	}
 }
 
@@ -31,67 +39,64 @@ void set_bounds(char key)
 {
 	if(state == IDLE)
 	{
-		if(key == 60)//ASCII for '<' = 60
+		if(key == 60)												
 		{
 			minAngle++;
-			if(minAngle > 180)
-			{
-				minAngle = 180;
-			}
+			if(minAngle > 180)	{	minAngle = 180;	}
 			ES_printf(0, "MIN ANGLE RANGE: %d\nMAX ANGLE RANGE: %d\n\n--------------------------\n\n", minAngle, maxAngle);
 		}
-		else if(key == 62)//ASCII for '>' = 62
+		else if(key == 62)										
 		{
 			maxAngle--;
-			if(maxAngle < 0)
-			{
-				maxAngle = 0;
-			}
+			if(maxAngle < 0)		{	maxAngle = 0;	}
 			ES_printf(0, "MIN ANGLE RANGE: %d\nMAX ANGLE RANGE: %d\n\n--------------------------\n\n", minAngle, maxAngle);
 		}
 	}
 }
 
-void idle_state(void)
-{
-	state = IDLE;
-	//placeholder for code since this requires buzzer that doesnt exist yet
-	//angle min and max wont do anything
-}
+void idle_state	  (void)		{		state = IDLE;				}
+void auto_state	  (void)		{		state = AUTOMATIC;	}
+void manual_state (void)		{		state = MANUAL;			}
 
-void auto_state(void)
-{
-	state = AUTOMATIC;
-	//wihtout input, angle will loop through min to max indefinitly
-}
-
-void manual_state(void)
-{
-	state = MANUAL;
-	//angle will require inputs for lowering to min and raising to max ( < and > )
-}
 
 void manual_run(void)
 {
-	int angle;
-	
 	ADC_start();
 	while(!adcReady);
 	adcReady = false;
 	
-	angle = potValue * 180 / 4095;
-	servo_setAngle(angle);
+	if(!joystickCTRL)
+	{
+		servoPOS = potValue * 180 / 4095;
+		servo_setAngle(servoPOS);
 	
-	echoReady = false;
-	ultrasonic_trigger();
-	ES_msDelay(60);
+		echoReady = false;
+		ultrasonic_trigger();
+		ES_msDelay(60);
 	
-	if(echoReady){
-		ES_printf(0, "\rAngle: %3d Degrees		Distance: %3d cm		", angle, ultrasonic_getCM());
+		if(echoReady){
+			ES_printf(0, "\rPot Angle: %3d Degrees  Distance: %3d cm		", servoPOS, ultrasonic_getCM());
+		}
+		else{
+			ES_printf(0, "\rPot Angle: %3d Degrees  Distance: ------		", servoPOS);
+		}
 	}
-	else{
-		ES_printf(0, "\rAngle: %3d Degrees		Distance: ------		", angle);
-	}
+	else
+	{
+		if			(joyX > 2400)		{		servoPOS = servoPOS + 5;		}		// pushed right and can change speed
+		else if	(joyX < 1700)		{		servoPOS = servoPOS - 5;		}		// pushed left  and can change speed
+		
+		if	(servoPOS > 180)	{		servoPOS = 180;		}								// don't go past the ends
+		if	(servoPOS < 0)		{		servoPOS = 0;			}
+		
+		servo_setAngle(servoPOS);
 	
+		echoReady = false;
+		ultrasonic_trigger();
+		ES_msDelay(60);
+	
+		if(echoReady)	{		ES_printf(0, "\rjoystick Angle: %3d Degrees  Distance: %3d cm		", servoPOS, ultrasonic_getCM());		}
+		else					{		ES_printf(0, "\rjoystick Angle: %3d Degrees  Distance: ------		", servoPOS);												}
+	}
 }
 

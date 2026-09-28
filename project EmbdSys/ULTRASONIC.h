@@ -17,6 +17,6 @@ void ultrasonic_trigger(void);
 
 void TIMER0A_Handler(void);
 
-uint32_t ultrasonic_getCM(void); //getter function
+uint32_t ultrasonic_getCM(void);	// getter function - returns the last measured distance in cm
 
 #endif

@@ -11,12 +11,5 @@ void SYSTICK_setup(void)
 	SysTick -> CTRL |= (1 << 0) | (1 << 1) | (1 << 2);
 }
 
-void initTICK(void)
-{
-	SYSTICK_setup();
-}
-
-void SysTick_Handler(void)
-{
-	msTick++;
-}
+void initTICK(void)					{		SYSTICK_setup();	}
+void SysTick_Handler(void)	{		msTick++;					}

@@ -14,8 +14,8 @@ void GPIOL_setup(void)
 	GPIOL -> DIR &= ~(1 << 4);
 	GPIOL -> AFSEL |= (1 << 4);
 	GPIOL -> AFSEL &= ~(1 << 5);
-	GPIOL -> PCTL &= ~0xF0000;
-	GPIOL -> PCTL |= 0x30000;
+	GPIOL -> PCTL &= ~(0xF << 16);                    
+	GPIOL -> PCTL |= (3 << 16);                      
 	GPIOL -> DEN |= (1 << 4) | (1 << 5);
 	GPIOL -> DATA &= ~ (1 << 5);
 }
@@ -28,24 +28,20 @@ void TIMER0_setup(void)
 	while((SYSCTL -> PRTIMER & (1 << 0)) == 0);
 	
 	TIMER0 -> CTL = 0;
-	TIMER0 -> CFG = 0x4;
-	TIMER0 -> TAMR = 0x17; 
-	TIMER0 -> CTL = 0x0C;
-	TIMER0 -> TAILR = 0xFFFF;
-	TIMER0 -> TAPR = 0xFF;
+	TIMER0 -> CFG = (1 << 2);
+	TIMER0 -> TAMR = (3 << 0) | (1 << 2) | (1 << 4);
+	TIMER0 -> CTL = (3 << 2);
+	TIMER0 -> TAILR = (0xFFFF << 0);
+	TIMER0 -> TAPR = (0xFF << 0);
 	
 	TIMER0 -> ICR = (1 << 2);
 	TIMER0 -> IMR |= (1 << 2); 
 	NVIC -> ISER[0] |= (1 << 19);
 	
 	TIMER0 -> CTL |= (1 << 0);
-	
 }
 
-void initULTRASONIC(void)
-{
-	TIMER0_setup();
-}
+void initULTRASONIC(void){	TIMER0_setup();	}
 
 void ultrasonic_trigger(void)
 {
@@ -59,20 +55,14 @@ void TIMER0A_Handler(void)
 	uint32_t now;
 	
 	TIMER0 -> ICR = (1 << 2);                     
-	now = TIMER0 -> TAR & 0xFFFFFF;               
+	now = TIMER0 -> TAR & (0xFFFFFF << 0);               
 	
-	if(GPIOL -> DATA & (1 << 4))                
-	{
-		echoStart = now;
-	}
+	if(GPIOL -> DATA & (1 << 4))	{	echoStart = now;	}
 	else                                           
 	{
-		echoWidth = (now - echoStart) & 0xFFFFFF;   
+		echoWidth = (now - echoStart) & (0xFFFFFF << 0);  
 		echoReady = true;
 	}
 }
 
-uint32_t ultrasonic_getCM(void)
-{
-	return echoWidth / 928; // 16 counts/us x 58 us/cm
-}
+uint32_t ultrasonic_getCM(void){		return echoWidth / 928;		} // 16 counts/us x 58 us/cm
