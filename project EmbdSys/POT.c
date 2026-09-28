@@ -34,8 +34,7 @@ void initADC(void)
 	
 	ADC0 -> ACTSS &= ~(1 << 2);
 	ADC0 -> EMUX &= ~((1 << 8) | (1 << 9) | (1 << 10) | (1 << 11));
-	
-	//new with joystick
+
 	ADC0 -> SSMUX2 = (0 << 0) | (1 << 4) | (2 << 8);		// read pot, then joystick X, then joystick Y
 	ADC0 -> SSCTL2 = (1 << 9) | (1 << 10);							//END (bit 9) + interrupt (bit 10)
 	
@@ -50,7 +49,6 @@ void ADC_start(void)	{	 ADC0 -> PSSI = (1 << 2);	}		// take one set of readings 
 
 void ADC0SS2_Handler(void)
 {
-	// results come out in the same order they were read
 	potValue = ADC0 -> SSFIFO2 & 0xFFF;             // pot        (PE3)
 	joyX     = ADC0 -> SSFIFO2 & 0xFFF;             // joystick X (PE2)
 	joyY     = ADC0 -> SSFIFO2 & 0xFFF;             // joystick Y (PE1)

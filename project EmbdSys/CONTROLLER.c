@@ -35,40 +35,18 @@ void GPIOM_Handler(void)
 	
 	if((msTick - lastPressTime) >= BUTTON_WAIT)
 	{
-		if(GPIOM -> MIS & (1 << 0)){                  // button A or Key A
-			holdingLastPressed = 'a';                   // AUTOMATIC
-				pressed = true;
-		}
-		else if(GPIOM -> MIS & (1 << 1)){             // button B or Key <
-			holdingLastPressed = '<';                   // min angle
-			pressed = true;
-		}
-		else if(GPIOM -> MIS & (1 << 2)){             // button C or Key M
-			holdingLastPressed = 'm';                   // MANUAL
-			pressed = true;
-		}
-		else if(GPIOM -> MIS & (1 << 3)){             // button D or Key >
-			holdingLastPressed = '>';                   // max angle
-			pressed = true;
-		}
-		else if(GPIOM -> MIS & (1 << 6)){             // joystick button or Key ESC
-			holdingLastPressed = 27;                    // IDLE
-			pressed = true;
-		}
-		else if(GPIOM -> MIS & (1 << 4)){             // button E or Key J
-			holdingLastPressed = 'j';                   // switch
-			pressed = true;
-		}
-		else if(GPIOM -> MIS & (1 << 5)){             // button F or Key D
-			holdingLastPressed = 'd';                   // echo
-			pressed = true;
-		}
-	
+		if			(GPIOM -> MIS & (1 << 0))		{		holdingLastPressed 	= 'a'; 		pressed = true;		} 	// 	AUTOMATIC 		Button A 	or 	Key 	A
+		else if	(GPIOM -> MIS & (1 << 1))		{		holdingLastPressed 	=	'<';    pressed = true;		}		// 	MIN ANGLE 		Button B 	or 	Key 	<
+		else if	(GPIOM -> MIS & (1 << 2))		{		holdingLastPressed 	= 'm';   	pressed = true;		}		//	MANUAL				Button C 	or 	Key 	M
+		else if	(GPIOM -> MIS & (1 << 3))		{		holdingLastPressed 	= '>';   	pressed = true;		}		// 	MAX ANGLE			Button D 	or 	Key 	>
+		else if	(GPIOM -> MIS & (1 << 4))		{		holdingLastPressed 	= 'j';    pressed = true;		}		//	SWITCH				Button E 	or 	Key 	J
+		else if	(GPIOM -> MIS & (1 << 5))		{		holdingLastPressed 	= 'd';    pressed = true;		} 	// 	ECHO					Button F 	or 	Key 	D
+		else if	(GPIOM -> MIS & (1 << 6))		{		holdingLastPressed 	= 27;   	pressed = true;		} 	//	IDLE					Joystick  or 	Key 	ESC
+		
 		if(pressed){
 			lastPressTime = msTick; 
-			hasButtonPressed = true;                    // hand it to main
-		
-			if(holdingLastPressed != 27){		UART_sendChar(holdingLastPressed);		}	// echo like the keyboard, except ESC
+			hasButtonPressed = true;            
+			if(holdingLastPressed != 27){		UART_sendChar(holdingLastPressed);		}	
 		}
 	}
 	

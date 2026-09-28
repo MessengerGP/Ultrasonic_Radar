@@ -43,8 +43,7 @@ void UART_sendChar(char c)
 void UART_sendString(char *str)
 {
 	int length = strlen(str);
-	
-	for(int i = 0; i < length; i++){	UART_sendChar(str[i]);	}
+	for	(int i = 0; i < length; i++)	{	UART_sendChar(str[i]);	}
 }
 
 void UART0_Handler(void)
@@ -53,7 +52,7 @@ void UART0_Handler(void)
 		holdingLastPressed = UART0 -> DR & (0xFF << 0);
 		hasButtonPressed = true;
 		
-		if(holdingLastPressed != 27){ UART_sendChar(holdingLastPressed);	}
+		if(holdingLastPressed != 27)		{ UART_sendChar(holdingLastPressed);	}
 
 		UART0 -> ICR = (1 << 4);
 	}

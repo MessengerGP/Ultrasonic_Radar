@@ -41,14 +41,9 @@ void TIMER0_setup(void)
 	TIMER0 -> CTL |= (1 << 0);
 }
 
-void initULTRASONIC(void){	TIMER0_setup();	}
+void initULTRASONIC(void)				{			TIMER0_setup();		}
 
-void ultrasonic_trigger(void)
-{
-	GPIOL -> DATA |= (1 << 5);
-	ES_usDelay(150);
-	GPIOL -> DATA &= ~(1 << 5);  
-}
+void ultrasonic_trigger(void)		{		GPIOL -> DATA |= (1 << 5);			ES_usDelay(150);				GPIOL -> DATA &= ~(1 << 5);  }
 
 void TIMER0A_Handler(void)
 {
@@ -57,12 +52,8 @@ void TIMER0A_Handler(void)
 	TIMER0 -> ICR = (1 << 2);                     
 	now = TIMER0 -> TAR & (0xFFFFFF << 0);               
 	
-	if(GPIOL -> DATA & (1 << 4))	{	echoStart = now;	}
-	else                                           
-	{
-		echoWidth = (now - echoStart) & (0xFFFFFF << 0);  
-		echoReady = true;
-	}
+	if		(GPIOL -> DATA & (1 << 4))	{		echoStart = now;																														}
+	else 		         		              { 	echoWidth = (now - echoStart) & (0xFFFFFF << 0);  			echoReady = true;		}
 }
 
-uint32_t ultrasonic_getCM(void){		return echoWidth / 928;		} // 16 counts/us x 58 us/cm
+uint32_t ultrasonic_getCM(void)	{		return echoWidth / 928;		} // 16 counts/us x 58 us/cm

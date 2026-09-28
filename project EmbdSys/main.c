@@ -11,8 +11,6 @@
 #include "TICK.h"
 
 
-//run at 15 micro seconds not 10
-// -----------------Main function-------------------
 int main(void)
 {
 	ES_setSystemClockFrequency(16); 
@@ -48,14 +46,14 @@ int main(void)
 					ADC_start();
 					while(!adcReady);                              
 					adcReady = false;
-					ES_printf(0, "\nPot: %d   X: %d   Y: %d\n", potValue, joyX, joyY); 		// replaced (potValue * 180 / 4095) with joyX and joyY
+					ES_printf(0, "\nPot: %d   X: %d   Y: %d\n", potValue, joyX, joyY); 		
 					servo_setAngle(potValue * 180 / 4095);        
 				}
 				
 				else if (holdingLastPressed == 'd' || holdingLastPressed == 'D'){
 					echoReady = false;
 					ultrasonic_trigger();
-					ES_msDelay(60);                                 											// give the echo time to return
+					ES_msDelay(60);                                 									
     
 					if(echoReady)	{  ES_printf(0, "\nDistance: %d cm\n\n--------------------------\n\n", ultrasonic_getCM());	}
 					else 					{	 ES_printf(0, "\nNo echo\n");																															}
@@ -67,7 +65,8 @@ int main(void)
 			set_bounds(holdingLastPressed);
     }
 		
-		if(state == MANUAL){	manual_run();	}
+		if(state == MANUAL)			{		manual_run();	}
+		if(state == AUTOMATIC)	{		auto_run();		}
 	}
 	
   return 0;

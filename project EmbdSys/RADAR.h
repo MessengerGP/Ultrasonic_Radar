@@ -25,6 +25,8 @@ void manual_state(void);
 
 void manual_run(void);
 
+void auto_run(void);
+
 #endif
 
 

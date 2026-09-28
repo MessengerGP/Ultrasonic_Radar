@@ -26,7 +26,7 @@ void initBUZZER(void)
 	PWM0_setup();
 	
 	PWM0 -> _2_CTL = 0;
-	PWM0 -> _1_GENA = (1 << 2) | (1 << 3) | (1 << 7);
+	PWM0 -> _2_GENA = (1 << 2) | (1 << 3) | (1 << 7);
 	PWM0 -> _2_LOAD = 999;
 	PWM0 -> _2_CMPA = 500;
 	PWM0 -> _2_CTL = (1 << 0); 
@@ -35,9 +35,5 @@ void initBUZZER(void)
 void buzzer_on(void) { PWM0 -> ENABLE |= (1 << 4);	 }
 void buzzer_off(void){ PWM0 -> ENABLE &= ~(1 << 4);	 }
 
-void buzzer_beep(uint32_t ms)
-{
-	buzzer_on();
-	ES_msDelay(ms);
-	buzzer_off();
-}
+void buzzer_beep(uint32_t ms)		{			buzzer_on();			ES_msDelay(ms);			buzzer_off();			}
+
