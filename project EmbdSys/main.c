@@ -1,14 +1,22 @@
-#include "ES.h"
-#include "UART.h"
-#include "RADAR.h"
-#include "LCD.h"
-#include "LCD_Display.h"
-#include "BUZZER.h"
-#include "POT.h"
-#include "SERVO.h"
-#include "ULTRASONIC.h"
-#include "CONTROLLER.h"
-#include "TICK.h"
+#include "INCLUDES.h"
+
+/*
+--- WIRE COLOURS ------------------- USAGE --------------------  EXTRA? ------------
+YELLOW 							= 	(+3.3V, +5V) and (GND) 						&		 (7)		 	(+1 jumper)
+BLACK 							= 	(BUZZER) 													&		 (2)		 	(+1 jumper)
+GREY & WHITE 				= 	(SERVO) and (RADAR)								&		 (6)(4)		(N/A)
+BLUE 								= 	(POTENTIOMETER)										&		 (3)		 	(+1 jumper)
+RED & ORANGE 				= 	(LCD)															&		 (5)(7)		(+1 jumper)
+REMAINING WIRES 		= 	(FUNDUINO JOYSTICK SHIELD V1.A)		&		 (11)		 	(N/A)
+------------------------------------------------------------------------------------
+
+----- BREADBOARD ------------------- USAGE ---------------------	WHERE? -----------
+100 ohms					 	=		BUZZER current limit							&			C10 to C13
+1k 	ohms						=		ECHO voltage divider							&			H32 to H35
+2k 	ohms						=		ECHO voltage divider							&			I35 to -rail (blue) 
+------------------------------------------------------------------------------------
+*/
+
 
 
 int main(void)
@@ -26,7 +34,14 @@ int main(void)
 	
 	initSPI();
 	initLCD();
+// ----------------------------------
+	
+	setRotation(2);
+	
+	lcd_radarBackground();
 
+// ----------------------------------
+	
 	__enable_irq();
 	 
 	while(true)

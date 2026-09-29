@@ -1,4 +1,4 @@
-#include "POT.h"
+#include "INCLUDES.h"
 
 volatile uint16_t potValue = 0;
 volatile uint16_t joyX = 0;					//AIN1, PE2 

@@ -1,7 +1,7 @@
 #ifndef POT_H
 #define POT_H
 
-#include "ES.h"
+#include "INCLUDES.h"
 
 extern volatile uint16_t potValue;
 extern volatile uint16_t joyX;                      

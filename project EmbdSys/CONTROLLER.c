@@ -1,5 +1,4 @@
-#include "CONTROLLER.h"
-#include "TICK.h"		//uses msTick
+#include "INCLUDES.h"
 
 #define BUTTON_WAIT 200
 

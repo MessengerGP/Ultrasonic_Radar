@@ -1,9 +1,4 @@
-#include "RADAR.h"
-
-#include "POT.h"
-#include "SERVO.h"
-#include "ULTRASONIC.h"
-#include "BUZZER.h"
+#include "INCLUDES.h"
 
 
 int state = IDLE;

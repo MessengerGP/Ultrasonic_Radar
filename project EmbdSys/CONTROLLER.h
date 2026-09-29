@@ -1,9 +1,7 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include "ES.h"
-#include "UART.h" // for the button being pressedb
-
+#include "INCLUDES.h"
 	
 void GPIOM_setup(void); // bit 11
 
