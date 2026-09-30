@@ -35,6 +35,101 @@ void spi_Transmit(uint8_t data)
 }
 
 // ----------------------------------------- DISPLAY -----------------------------------------
+
+
+void lcd_modeInfo(void)
+{
+	char text[20];
+	
+	static int lastState = 0;
+	if(state != lastState)	{	 fillRect(0, 0, 159, 240, black);		lastState = state;	}
+	
+	setRotation(2);
+	
+	setCharConfig(white, 2, 2, black, 2);
+	if				(state == IDLE)				{		moveCursor(48, 230);		drawString("IDLE  ", 6);		}
+	else if		(state == AUTOMATIC)	{		moveCursor(32, 230);		drawString("AUTO  ", 6);		}
+	else if		(state == MANUAL)			{		moveCursor(11, 230);		drawString("MANUAL", 6);		}
+	
+	setCharConfig(white, 1, 1, black, 1);
+	if(state == IDLE)
+	{
+		moveCursor(11, 180);			drawString("MIN", 3);
+		moveCursor(11, 155);			drawString("MAX", 3);
+		moveCursor(55, 180);			drawString("ANGLE:", 6);
+		moveCursor(55, 155);			drawString("ANGLE:", 6);
+		
+		sprintf(text, "%03d", minAngle);
+		moveCursor(120, 180);
+		drawString(text, strlen(text));
+		
+		sprintf(text, "%03d", maxAngle);
+		moveCursor(120, 155);
+		drawString(text, strlen(text));
+	}
+	else if(state == AUTOMATIC)
+	{
+		moveCursor(11, 155);			drawString("DIST:", 5);
+		moveCursor(11, 180);			drawString("ANGLE:", 6);
+		moveCursor(115, 155);			drawString("cm", 2);
+	}
+	else if(state == MANUAL)
+	{
+		moveCursor(11, 180);			drawString("MODE:", 5);
+		moveCursor(11, 130);			drawString("DIST:", 5);
+		moveCursor(11, 155);			drawString("ANGLE:", 6);
+		moveCursor(115, 130);			drawString("cm", 2);
+		moveCursor(115, 155);			drawString("deg", 3);
+		
+		if(joystickCTRL)
+		{
+			moveCursor(70, 180);			drawString("JOYSTICK", 8);
+		}
+		else
+		{
+			setCharConfig(black, 1, 1, black, 1);
+			moveCursor(70, 180);			drawString("JOYSTICK", 8);
+			
+			setCharConfig(white, 1, 1, black, 1);
+			moveCursor(70, 180);			drawString("POT", 3);
+		}
+	}
+	
+	setRotation(3);
+	fillRect(159, 0, 3, 240, green);
+}
+
+
+void lcd_liveInfo(int angle)
+{
+	char angleText[10];
+	char distText[10];
+	
+	sprintf(angleText, "%03d", angle);
+
+	int cm = ultrasonic_getCM();
+	if(echoReady && cm <= 200)	{		sprintf(distText, "%03d", cm);		}
+	
+	setRotation(2);
+	setCharConfig(white, 1, 1, black, 1);
+	
+	if(state == AUTOMATIC)
+	{
+		moveCursor(75, 180);		drawString(angleText, strlen(angleText));
+		moveCursor(75, 155);		drawString(distText, strlen(distText));
+	}
+	else if(state == MANUAL)
+	{
+		moveCursor(75, 155);		drawString(angleText, strlen(angleText));
+		moveCursor(75, 130);		drawString(distText, strlen(distText));
+	}
+	
+	setRotation(3);
+}
+
+
+//------------------------------------------ OLD CODE --------------------------------------
+/*
 void lcd_radarBackground(void)
 {
 	fillScreen(ILI9341_BLACK);
@@ -51,3 +146,21 @@ void lcd_radarBackground(void)
 
 static int lastAngle = 90;
 static int lastCM = 0;
+
+void lcd_radarLine(int angle)
+{
+	float oldRad = lastAngle * PI / 180;
+	float newRad = angle * PI / 180;
+	
+	for(int dis = 0; dis <= RADAR_R; dis++)
+	{
+		int oldX = RADAR_X;
+		int oldY = RADAR_Y;
+		int newX = RADAR_X;
+		int newY = RADAR_Y;
+		// if distance between ring gap = 0 (%)??
+		
+	}
+}
+
+*/

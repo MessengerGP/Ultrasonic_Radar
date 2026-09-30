@@ -36,9 +36,11 @@ int main(void)
 	initLCD();
 // ----------------------------------
 	
-	setRotation(2);
+	setRotation(3);
 	
-	lcd_radarBackground();
+	fillScreen(black);
+	
+	lcd_modeInfo();
 
 // ----------------------------------
 	
@@ -78,6 +80,7 @@ int main(void)
 
 			change_state(holdingLastPressed);
 			set_bounds(holdingLastPressed);
+			lcd_modeInfo();
     }
 		
 		if(state == MANUAL)			{		manual_run();	}

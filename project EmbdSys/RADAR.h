@@ -3,14 +3,11 @@
 
 #include "INCLUDES.h"
 
-#define IDLE				1
-#define AUTOMATIC		2
-#define MANUAL			3
-
 
 extern int state;
 extern int minAngle;
 extern int maxAngle;
+extern bool joystickCTRL;
 
 
 void change_state(char c);
