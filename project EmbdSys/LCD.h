@@ -14,5 +14,6 @@ void lcd_sonarBase(void);
 void lcd_sonarLine(int servoAngle);
 void lcd_sonarMap(int servoAngle);
 void lcd_echoDot(int servoAngle, int cm);
+void lcd_gauge(int angle);
 
 #endif

@@ -40,7 +40,7 @@ void spi_Transmit(uint8_t data)
 
 // ----------------------------------------- DISPLAY -----------------------------------------
 
-
+// ------------------------------------ LEFT SIDE OF LCD -------------------------------------
 void lcd_modeInfo(void)
 {
 	char text[20];
@@ -106,9 +106,10 @@ void lcd_modeInfo(void)
 	
 	setRotation(3);
 	
-	fillRect(159, 0, 	 3, 	240, 	green);		// middle line
-	fillRect(1, 	45, 159, 	2, 		green);		// state line
-	fillRect(1, 	158, 159, 2, 		green);		// error line
+	fillRect	(159, 0, 	 3, 	240, 	green);		// middle line
+	fillRect	(1, 	45, 159, 	2, 		green);		// state line
+	fillRect	(1, 	158, 159, 2, 		green);		// error line
+	lcd_gauge	(radar_getAngle());
 }
 
 
@@ -137,8 +138,10 @@ void lcd_liveInfo(int angle)
 	}
 	
 	setRotation(3);
-	lcd_sonarLine(angle);
-	lcd_sonarMap(angle);
+	
+	lcd_sonarLine		(angle);
+	lcd_sonarMap		(angle);
+	lcd_gauge				(angle);
 }
 
 
@@ -161,6 +164,7 @@ void lcd_error(char *reason, int x)
 	setRotation(3);
 }
 
+// ------------------------------------ RIGHT SIDE OF LCD -------------------------------------
 
 void lcd_sonarBase(void)
 {
@@ -202,6 +206,16 @@ void lcd_sonarBase(void)
 	fillRect(228,7,8,7,   blue);	  // left eye
 	fillRect(245,7,8,7,   blue);	  // right eye
 	fillRect(160,145,159,2, green); // right boarder
+	
+	fillRect   (170, 187, 141, 2, white);		// top
+	fillRect   (170, 223, 141, 2, white);		// bottom
+	fillRect   (170, 187, 2, 37, white);		// left
+	fillRect   (309, 187, 2, 37, white);		// right
+	
+	setRotation(2);
+	setCharConfig(white, 1, 2, black, 2);
+	moveCursor(170, 88);		drawString("RANGE:", 6);
+	setRotation(3);
 }
 
 void lcd_sonarLine(int servoAngle)
@@ -210,7 +224,7 @@ void lcd_sonarLine(int servoAngle)
 	static int lastEndY = 133;
 	
 	int startX 	= 240;
-	int startY 	= 14;
+	int startY 	= 17;
 	int X 			= 240;
 	int Y 			= 88;
 	int radiusX = 75;
@@ -308,4 +322,41 @@ void lcd_echoDot(int servoAngle, int cm)
 		echoDotY = startY + size * (endY - startY);
 		fillRect(echoDotX - 2, echoDotY - 2, 4, 4, blue);
 	}
+}
+
+
+
+void lcd_gauge(int angle)
+{
+	static int lastAngleX = -1;
+	static int lastMinX = -1;
+	static int lastMaxX = -1;
+	
+	int angleX 	= 180 + angle 		* 120 / 180;
+	int minX 		= 180 + minAngle 	* 120 / 180;
+	int maxX 		= 180 + maxAngle 	* 120 / 180;
+	
+	if(lastAngleX != -1)		{		fillRect(lastAngleX, 195, 2, 21, black);		}
+	if(lastMinX != -1)			{		fillRect(lastMinX, 199, 3, 13, black);			}
+	if(lastMaxX != -1)			{		fillRect(lastMaxX, 199, 3, 13, black);			}
+	
+	fillRect(180, 205, 121, 1, white);
+	fillRect(180, 201, 1, 9, white);
+	fillRect(300, 201, 1, 9, white);
+	
+	if(state == AUTOMATIC)
+	{
+		fillRect(minX, 199, 3, 13, red);
+		fillRect(maxX, 199, 3, 13, red);
+		lastMinX = minX;
+		lastMaxX = maxX;
+	}
+	else
+	{
+		lastMinX = -1;
+		lastMaxX = -1;
+	}
+	
+	fillRect(angleX, 195, 2, 21, green);
+	lastAngleX = angleX;
 }

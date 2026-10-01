@@ -5,7 +5,6 @@ void GPIOE_setup(void)
 	SYSCTL -> RCGCGPIO |= (1 << 4); 
 	while((SYSCTL -> PRGPIO & (1 << 4)) == 0);
 	
-	//CHANGED: PE1 (Y), PE2 (X), PE3 (pot) all analog inputs
 	GPIOE_AHB -> AMSEL |= (1 << 1) | (1 << 2) | (1 << 3);       
 	GPIOE_AHB -> DIR &= ~((1 << 1) | (1 << 2) | (1 << 3));  
 	GPIOE_AHB -> AFSEL |= (1 << 1) | (1 << 2) | (1 << 3);  

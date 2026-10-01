@@ -4,12 +4,6 @@
 #include "INCLUDES.h"
 
 
-extern int state;
-extern int minAngle;
-extern int maxAngle;
-extern bool joystickCTRL;
-
-
 void change_state(char c);
 void set_bounds(char key);
 

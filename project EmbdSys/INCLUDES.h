@@ -26,7 +26,6 @@
 #define black			ILI9341_BLACK
 #define blue			ILI9341_BLUE
 #define darkGreen ILI9341_DARKGREEN
-#define grey      ILI9341_DARKGREY
 
 #define IDLE					1
 #define AUTOMATIC			2
@@ -37,7 +36,6 @@
 #define PI						3.14159
 
 //global variable
-//global variables
 extern volatile char holdingLastPressed;
 extern volatile bool hasButtonPressed;
 

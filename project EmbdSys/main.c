@@ -59,14 +59,7 @@ int main(void)
 			}
       else if (holdingLastPressed == 'a' || holdingLastPressed == 'A'){		ES_printf(0, " was entered.\nState received: AUTOMATIC\n\n--------------------------\n\n");		}
       else if (holdingLastPressed == 'm' || holdingLastPressed == 'M'){		ES_printf(0, " was entered.\nState received: MANUAL\n\n--------------------------\n\n");			}
-				
-			else if (holdingLastPressed == 'p' || holdingLastPressed == 'P'){
-				ADC_start();
-				while(!adcReady);                              
-				adcReady = false;
-				ES_printf(0, "\nPot: %d   X: %d   Y: %d\n", potValue, joyX, joyY); 		
-				servo_setAngle(potValue * 180 / 4095);        
-			}
+
 			
 			else if (holdingLastPressed == 'd' || holdingLastPressed == 'D'){
 				echoReady = false;
@@ -83,6 +76,7 @@ int main(void)
 					ES_printf(0, "\nDistance: %d cm\n\n--------------------------\n\n", ultrasonic_getCM());
 					sprintf(echoText, "%03d", ultrasonic_getCM());
 					lcd_echoDot(radar_getAngle(), ultrasonic_getCM());
+					buzzer_beep(50);
 				}
 				else
 				{
@@ -92,8 +86,6 @@ int main(void)
 					lcd_error("no echo", 49);
 				}
 			}
-			
-			else if(holdingLastPressed == 't' || holdingLastPressed == 'T'){    ES_printf(0, "\nTicks: %d ms\n", msTick);			}
 
 			change_state(holdingLastPressed);
 			set_bounds(holdingLastPressed);

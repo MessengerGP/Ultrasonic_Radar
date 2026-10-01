@@ -38,11 +38,6 @@ void UART_sendChar(char c)
 	UART0 -> DR = c;
 }
 
-void UART_sendString(char *str)
-{
-	int length = strlen(str);
-	for	(int i = 0; i < length; i++)	{	UART_sendChar(str[i]);	}
-}
 
 void UART0_Handler(void)
 {
