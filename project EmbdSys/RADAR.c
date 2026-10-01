@@ -17,9 +17,10 @@ void change_state(char c)
 	else if	(c == 'a' || c == 'A')		{		auto_state();		}
 	else if	(c == 'm' || c == 'M')		{		manual_state();	}
 	else if	(c == 'j' || c == 'J')
-	{
-		if(!joystickCTRL)								{		joystickCTRL = true;				ES_printf(0, "\nControl: JOYSTICK\n");					}
-		else														{		joystickCTRL = false;				ES_printf(0, "\nControl: POTENTIOMETER\n");			}
+	{	
+		if				(state != MANUAL)				{		lcd_error("only in manual", 23);																									}
+		else if		(!joystickCTRL)					{		joystickCTRL = true;					ES_printf(0, "\nControl: JOYSTICK\n");					}
+		else															{		joystickCTRL = false;					ES_printf(0, "\nControl: POTENTIOMETER\n");			}
 	}
 }
 
@@ -29,22 +30,23 @@ void set_bounds(char key)
 	if(state == IDLE)
 	{
 		if			(key == 60)								{		minAngle += 10;
-			if		(minAngle > 180)					{		minAngle = 0;																																																																	}
-			if		(minAngle >= maxAngle)		{		ES_printf(0, "\rERROR! MIN ANGLE LARGER THAN MAX ANGLE!\n\n--------------------------\n\n");				buzzer_beep(500);			minAngle = 0;				}
-			else														{		ES_printf(0, "MIN ANGLE RANGE: %d\nMAX ANGLE RANGE: %d\n\n--------------------------\n\n", minAngle, maxAngle);																}
+			if		(minAngle > 180)					{		minAngle = 0;																																																																									}
+			if		(minAngle >= maxAngle)		{		ES_printf(0, "\rERROR! MIN ANGLE LARGER THAN MAX ANGLE!\n\n--------------------------\n\n");			lcd_error("min > max", 41);			minAngle = 0;				}
+			else														{		ES_printf(0, "MIN ANGLE RANGE: %d\nMAX ANGLE RANGE: %d\n\n--------------------------\n\n", minAngle, maxAngle);																								}
 		}
 		else if	(key == 62)								{		maxAngle -= 10;
-			if		(maxAngle < 0)						{		maxAngle = 180;																																																																}
-			if		(maxAngle <= minAngle)		{		ES_printf(0, "\rERROR! MAX ANGLE SMALLER THAN MIN ANGLE!\n\n--------------------------\n\n");				buzzer_beep(500);			maxAngle = 180;			}
-			else														{		ES_printf(0, "MIN ANGLE RANGE: %d\nMAX ANGLE RANGE: %d\n\n--------------------------\n\n", minAngle, maxAngle);																}
+			if		(maxAngle < 0)						{		maxAngle = 180;																																																																								}
+			if		(maxAngle <= minAngle)		{		ES_printf(0, "\rERROR! MAX ANGLE SMALLER THAN MIN ANGLE!\n\n--------------------------\n\n");			lcd_error("max < min", 41);			maxAngle = 180;			}
+			else														{		ES_printf(0, "MIN ANGLE RANGE: %d\nMAX ANGLE RANGE: %d\n\n--------------------------\n\n", minAngle, maxAngle);																								}
 		}
 	}
+	else if(key == 60 || key == 62)		{		lcd_error("only in idle", 38);		}
 }
 
 
-void idle_state	  (void)		{		state = IDLE;				fillRect(0, 0, 159, 240, black);		fillRect(159, 0, 3, 240, green);		}
-void auto_state	  (void)		{		state = AUTOMATIC;	fillRect(0, 0, 159, 240, black);		fillRect(159, 0, 3, 240, green);		}
-void manual_state (void)		{		state = MANUAL;			fillRect(0, 0, 159, 240, black);		fillRect(159, 0, 3, 240, green);		}
+void idle_state	  (void)		{		state = IDLE;															}		
+void auto_state	  (void)		{		state = AUTOMATIC;	buzzer_beep(200);			}
+void manual_state (void)		{		state = MANUAL;			buzzer_beep(200);			}
 
 
 void manual_run(void)
@@ -70,22 +72,22 @@ void manual_run(void)
 		else{
 			ES_printf(0, "\rPot Angle: %3d Degrees  Distance: ------		", servoPOS);
 		}
-		
-		if(!joystickCTRL)
-		{
-			servoPOS = potValue * 180 / 4095;
-			servo_setAngle(servoPOS);
+	}	
+	if(!joystickCTRL)
+	{
+		servoPOS = potValue * 180 / 4095;
+		servo_setAngle(servoPOS);
 	
-			echoReady = false;
-			ultrasonic_trigger();
-			ES_msDelay(60);
+		echoReady = false;
+		ultrasonic_trigger();
+		ES_msDelay(60);
 	
-			if(echoReady) {		ES_printf(0, "\rPot Angle: %3d Degrees  Distance: %3d cm		", servoPOS, ultrasonic_getCM());		}
-			else					{		ES_printf(0, "\rPot Angle: %3d Degrees  Distance: ------		", servoPOS);												}
-			lcd_liveInfo(servoPOS);
-			if((servoPOS == 0 || servoPOS == 180) && servoPOS != lastPOS)		{		buzzer_beep(50);		ES_msDelay(50);	 	 buzzer_beep(50);		}
-		}
+		if(echoReady) 						{		ES_printf(0, "\rPot Angle: %3d Degrees  Distance: %3d cm		", servoPOS, ultrasonic_getCM());		}
+		else											{		ES_printf(0, "\rPot Angle: %3d Degrees  Distance: ------		", servoPOS);												}
+		lcd_liveInfo(servoPOS);
+		if((servoPOS == 0 || servoPOS == 180) && servoPOS != lastPOS)		{		buzzer_beep(50);		ES_msDelay(50);	 	 buzzer_beep(50);		}
 	}
+	
 	
 	else
 	{
@@ -113,8 +115,8 @@ void auto_run(void)
 	if	(servoPOS < minAngle)		{		servoPOS = minAngle;		}
 	if	(servoPOS > maxAngle)		{		servoPOS = maxAngle;		}
 	
-	if	(directionPOS)		{		servoPOS = servoPOS + 2;	}
-	else									{		servoPOS = servoPOS - 2;	}
+	if	(directionPOS)		{		servoPOS = servoPOS + 5;	}
+	else									{		servoPOS = servoPOS - 5;	}
 	
 	if				(servoPOS >= maxAngle)		{		servoPOS = maxAngle;			directionPOS = false;		buzzer_beep(50);		ES_msDelay(50);	 	 buzzer_beep(50);		}
 	else if		(servoPOS <= minAngle)		{		servoPOS = minAngle;			directionPOS = true;		buzzer_beep(50);		ES_msDelay(50);		 buzzer_beep(50);		}

@@ -9,5 +9,5 @@ void initSPI(void);
 
 void lcd_modeInfo(void);
 void lcd_liveInfo(int angle);
-
+void lcd_error(char *reason, int x);
 #endif

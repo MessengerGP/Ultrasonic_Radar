@@ -96,14 +96,17 @@ void lcd_modeInfo(void)
 	}
 	
 	setRotation(3);
-	fillRect(159, 0, 3, 240, green);
+//					X		 Y	  W		 H
+	fillRect(159, 0, 	 3, 	240, 	green);		// middle line
+	fillRect(1, 	45, 159, 	2, 		green);		// state line
+	fillRect(1, 	158, 159, 2, 		green);		// error line
 }
 
 
 void lcd_liveInfo(int angle)
 {
 	char angleText[10];
-	char distText[10];
+	char distText[10] = "000";
 	
 	sprintf(angleText, "%03d", angle);
 
@@ -123,6 +126,26 @@ void lcd_liveInfo(int angle)
 		moveCursor(75, 155);		drawString(angleText, strlen(angleText));
 		moveCursor(75, 130);		drawString(distText, strlen(distText));
 	}
+	
+	setRotation(3);
+}
+
+
+void lcd_error(char *reason, int x)
+{
+	setRotation(2);
+	
+	setCharConfig(red, 1, 2, black, 2);
+	moveCursor(50, 77);			drawString("ERROR!", 6);
+	setCharConfig(red, 1, 1, black, 1);
+	moveCursor(47, 40);			drawString("REASON:", 7);
+	setCharConfig(red, 1, 1, black, 1);
+	moveCursor(x, 15);			drawString(reason, strlen(reason));
+	
+	for(int i = 0; i < 5; i++)		{		buzzer_beep(60);		ES_msDelay(60);		}
+	ES_msDelay(1000);
+	
+	fillRect(0, 0, 80, 155, black);
 	
 	setRotation(3);
 }

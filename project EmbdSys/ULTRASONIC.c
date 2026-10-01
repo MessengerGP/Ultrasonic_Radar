@@ -4,6 +4,7 @@
 volatile uint32_t echoStart = 0;
 volatile uint32_t echoWidth = 0;
 volatile bool echoReady = false;
+char echoText[10] = "N/A";
 
 void GPIOL_setup(void)
 {
