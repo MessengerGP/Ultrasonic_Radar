@@ -1,5 +1,9 @@
 #include "INCLUDES.h"
 
+static int echoDotX = -1;
+static int echoDotY = -1;
+
+
 // ----------------------------------------- SETUP -----------------------------------------
 void GPIOD_setup(void)
 {
@@ -94,9 +98,14 @@ void lcd_modeInfo(void)
 			moveCursor(70, 180);			drawString("POT", 3);
 		}
 	}
+
+	setCharConfig(white, 1, 1, black, 1);
+	moveCursor(11, 100);			drawString("ECHO:", 5);
+	moveCursor(115, 100);			drawString("cm", 2);
+	moveCursor(75, 100);			drawString(echoText, strlen(echoText));
 	
 	setRotation(3);
-//					X		 Y	  W		 H
+	
 	fillRect(159, 0, 	 3, 	240, 	green);		// middle line
 	fillRect(1, 	45, 159, 	2, 		green);		// state line
 	fillRect(1, 	158, 159, 2, 		green);		// error line
@@ -128,6 +137,8 @@ void lcd_liveInfo(int angle)
 	}
 	
 	setRotation(3);
+	lcd_sonarLine(angle);
+	lcd_sonarMap(angle);
 }
 
 
@@ -135,12 +146,12 @@ void lcd_error(char *reason, int x)
 {
 	setRotation(2);
 	
-	setCharConfig(red, 1, 2, black, 2);
-	moveCursor(50, 77);			drawString("ERROR!", 6);
+	setCharConfig	(red, 1, 2, black, 2);
+	moveCursor		(50, 77);		drawString("ERROR!", 6);
 	setCharConfig(red, 1, 1, black, 1);
-	moveCursor(47, 40);			drawString("REASON:", 7);
-	setCharConfig(red, 1, 1, black, 1);
-	moveCursor(x, 15);			drawString(reason, strlen(reason));
+	moveCursor		(47, 40);		drawString("REASON:", 7);
+	setCharConfig	(red, 1, 1, black, 1);
+	moveCursor		(x, 15);		drawString(reason, strlen(reason));
 	
 	for(int i = 0; i < 5; i++)		{		buzzer_beep(60);		ES_msDelay(60);		}
 	ES_msDelay(1000);
@@ -151,39 +162,150 @@ void lcd_error(char *reason, int x)
 }
 
 
-//------------------------------------------ OLD CODE --------------------------------------
-/*
-void lcd_radarBackground(void)
+void lcd_sonarBase(void)
 {
-	fillScreen(ILI9341_BLACK);
-	for(int r = RING_GAP; r <= RADAR_R; r = r + RING_GAP)
-	{
-		for(int a = 0; a <= 360; a++)
-		{
-			float rad = (a / 2.0) * PI / 180.0;
-			drawPixel(RADAR_X + r * cos(rad), RADAR_Y - r * sin(rad), ILI9341_DARKGREEN);
-		}
-	}
-	fillRect(RADAR_X - RADAR_R, RADAR_Y, RADAR_R * 2, 1, ILI9341_DARKGREEN);
-}
+	setRotation(3);
 
-static int lastAngle = 90;
-static int lastCM = 0;
+	int X 			= 240;
+	int Y 			= 88;
+	int radiusX = 75;
+	int radiusY = 45;
 
-void lcd_radarLine(int angle)
-{
-	float oldRad = lastAngle * PI / 180;
-	float newRad = angle * PI / 180;
 	
-	for(int dis = 0; dis <= RADAR_R; dis++)
+	for(int angle = 0; angle <= 180; angle++)
 	{
-		int oldX = RADAR_X;
-		int oldY = RADAR_Y;
-		int newX = RADAR_X;
-		int newY = RADAR_Y;
-		// if distance between ring gap = 0 (%)??
-		
+		float rad = angle * PI / 180;
+		fillRect(X + radiusX * cos(rad), Y + radiusY * sin(rad), 1, 1, darkGreen);
 	}
+	
+	int 	rightLineX 	= 260;
+	int 	rightLineY 	= 17;
+	float rightLine 	= 65 * PI / 180;
+	
+	for(int length = 0; length <= 175; length++)
+	{
+		float size = length / 100.0;
+		fillRect(rightLineX + size * radiusX * cos(rightLine), rightLineY + size * radiusY * sin(rightLine), 1, 1, darkGreen);
+	}
+	
+	int 	leftLineX 	= 220;
+	int 	leftLineY 	= 17;
+	float leftLine 		= 115 * PI / 180;
+	
+	for(int length = 0; length <= 175; length++)
+	{
+		float size = length / 100.0;
+		fillRect(leftLineX + size * radiusX * cos(leftLine), leftLineY + size * radiusY * sin(leftLine), 1, 1, darkGreen);
+	}
+	
+	fillRect(222,5,37,5,  blue);    // base
+	fillRect(228,7,8,7,   blue);	  // left eye
+	fillRect(245,7,8,7,   blue);	  // right eye
+	fillRect(160,145,159,2, green); // right boarder
 }
 
-*/
+void lcd_sonarLine(int servoAngle)
+{
+	static int lastEndX = 240;
+	static int lastEndY = 133;
+	
+	int startX 	= 240;
+	int startY 	= 14;
+	int X 			= 240;
+	int Y 			= 88;
+	int radiusX = 75;
+	int radiusY = 45;
+	
+	float arcRad 	= (180 - servoAngle) * PI / 180;
+	int endX 			= X + radiusX * cos(arcRad);
+	int endY 			= Y + radiusY * sin(arcRad);
+	
+	if(endX == lastEndX && endY == lastEndY)	{	return;	}
+	
+	for(int length = 0; length <= 100; length++)
+	{
+		float size = length / 100.0;
+		fillRect(startX + size * (lastEndX - startX), startY + size * (lastEndY - startY), 1, 1, black);
+	}
+
+	for(int length = 0; length <= 95; length++)
+	{
+		float size = length / 100.0;
+		fillRect(startX + size * (endX - startX), startY + size * (endY - startY), 1, 1, green);
+	}
+	
+	lastEndX = endX;
+	lastEndY = endY;
+}
+
+
+void lcd_sonarMap(int servoAngle)
+{
+	static int dotX[37];
+	static int dotY[37];
+	static bool hasDot[37];
+	static uint32_t lastRecord = 0;
+	
+	
+	int startX 	= 240;
+	int startY 	= 17;
+	int X 			= 240;
+	int Y 			= 88;
+	int radiusX = 75;
+	int radiusY = 45;
+	
+	int slot 	= servoAngle / 5;
+	int cm 		= ultrasonic_getCM();
+	
+	if((msTick - lastRecord) >= 1500)
+	{
+		if(hasDot[slot])	{		fillRect(dotX[slot] - 2, dotY[slot] - 2, 4, 4, black);		hasDot[slot] = false;		}
+		
+		if(echoReady && cm > 20 && cm <= 200)
+		{
+			float arcRad 		= (180 - servoAngle) * PI / 180;
+			int 	endX 			= X + radiusX * cos(arcRad);
+			int 	endY		 	= Y + radiusY * sin(arcRad);
+			float size 			= (cm / 200.0) * 0.90;
+			
+			dotX	[slot] 		= startX + size * (endX - startX);
+			dotY	[slot] 		= startY + size * (endY - startY);
+			hasDot[slot] 		= true;
+		}
+		
+		lastRecord = msTick;
+	}
+	
+	for(int i = 0; i < 37; i++)
+	{
+		if(hasDot[i])			{		fillRect(dotX[i] - 2, dotY[i] - 2, 4, 4, red);			}
+	}
+	
+	if(echoDotX != -1)	{		fillRect(echoDotX - 2, echoDotY - 2, 4, 4, blue);		}
+}
+
+
+
+void lcd_echoDot(int servoAngle, int cm)
+{
+	int startX 	= 240;
+	int startY 	= 17;
+	int X 			= 240;
+	int Y 			= 88;
+	int radiusX = 75;
+	int radiusY = 45;
+	
+	if(echoDotX != -1)	{	fillRect(echoDotX - 2, echoDotY - 2, 4, 4, black);		echoDotX = -1;	}
+	
+	if(cm != -1)
+	{
+		float arcRad 	= (180 - servoAngle) * PI / 180;
+		int endX 			= X + radiusX * cos(arcRad);
+		int endY 			= Y + radiusY * sin(arcRad);
+		float size 		= (cm / 200.0) * 0.90;
+		
+		echoDotX = startX + size * (endX - startX);
+		echoDotY = startY + size * (endY - startY);
+		fillRect(echoDotX - 2, echoDotY - 2, 4, 4, blue);
+	}
+}

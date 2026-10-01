@@ -504,6 +504,11 @@
               <FileType>5</FileType>
               <FilePath>.\INCLUDES.h</FilePath>
             </File>
+            <File>
+              <FileName>GLOBALS.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\GLOBALS.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -1,8 +1,5 @@
 #include "INCLUDES.h"
 
-volatile uint32_t msTick = 0;
-
-
 void SYSTICK_setup(void)
 {
 	SysTick -> CTRL = 0;

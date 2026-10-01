@@ -1,14 +1,7 @@
 #include "INCLUDES.h"
 
-
-int state = IDLE;
-int minAngle = 0;
-int maxAngle = 180;
-
-bool joystickCTRL = false;
-static int servoPOS = 90;			// to remember angle when swapping back and forth
-
-static bool directionPOS = false;	// false = first sweep down to min		|		 true = first sweep up to max
+static int servoPOS = 90;							// to remember angle when swapping back and forth
+static bool directionPOS = false;			// false = first sweep down to min		|		 true = first sweep up to max
 
 
 void change_state(char c)
@@ -131,3 +124,6 @@ void auto_run(void)
 	else					{		ES_printf(0, "\rAuto Angle: %3d Degrees  Distance: ------		", servoPOS);												}
 	lcd_liveInfo(servoPOS);
 }
+
+
+int radar_getAngle(void)		{		return servoPOS;		}

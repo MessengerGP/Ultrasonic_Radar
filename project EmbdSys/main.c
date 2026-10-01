@@ -21,7 +21,6 @@ REMAINING WIRES 		= 	(FUNDUINO JOYSTICK SHIELD V1.A)		&		 (11)		 	(N/A)
 
 int main(void)
 {
-		char text[10] = "";
 	ES_setSystemClockFrequency(16); 
 	ES_startDelayTimer();
 		
@@ -42,6 +41,7 @@ int main(void)
 	fillScreen(black);
 	
 	lcd_modeInfo();
+	lcd_sonarBase();
 
 // ----------------------------------
 	
@@ -74,28 +74,23 @@ int main(void)
 				ES_msDelay(60);
 				
 				setRotation(2);
-				setCharConfig(white, 1, 1, black, 1);
-				moveCursor(11, 100);			drawString("ECHO:", 5);
-				moveCursor(115, 100);			drawString("cm", 2);
-				
 				setCharConfig(black, 1, 1, black, 1);
-				moveCursor(75, 100);			drawString(text, strlen(text));
-				moveCursor(75, 100);			drawString("N/A", 3);
-				setCharConfig(white, 1, 1, black, 1);
+				moveCursor(75, 100);			drawString(echoText, strlen(echoText));
+				setRotation(3);
 				
 				if(echoReady && ultrasonic_getCM() <= 200)
 				{
 					ES_printf(0, "\nDistance: %d cm\n\n--------------------------\n\n", ultrasonic_getCM());
-					sprintf(text, "%03d", ultrasonic_getCM());
-					moveCursor(75, 100);			drawString(text, strlen(text));
+					sprintf(echoText, "%03d", ultrasonic_getCM());
+					lcd_echoDot(radar_getAngle(), ultrasonic_getCM());
 				}
 				else
 				{
 					ES_printf(0, "\nNo echo\n");
-					moveCursor(75, 100);			drawString("N/A", 3);
+					strcpy(echoText, "N/A");
+					lcd_echoDot(radar_getAngle(), -1);
 					lcd_error("no echo", 49);
 				}
-				setRotation(3);
 			}
 			
 			else if(holdingLastPressed == 't' || holdingLastPressed == 'T'){    ES_printf(0, "\nTicks: %d ms\n", msTick);			}

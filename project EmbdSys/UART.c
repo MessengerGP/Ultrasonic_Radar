@@ -1,7 +1,5 @@
 #include "INCLUDES.h"
 
-volatile char holdingLastPressed;
-volatile bool hasButtonPressed = false; 
 
 void GPIOA_setup(void)
 {

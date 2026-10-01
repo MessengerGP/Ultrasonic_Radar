@@ -3,8 +3,6 @@
 
 #include "INCLUDES.h"
 
-extern volatile uint32_t msTick;
-
 
 void SYSTICK_setup(void);
 

@@ -3,10 +3,6 @@
 
 #include "INCLUDES.h"
 
-extern volatile uint32_t echoStart;
-extern volatile uint32_t echoWidth;
-extern volatile bool echoReady;
-extern char echoText[10];
 
 void GPIOL_setup(void);
 

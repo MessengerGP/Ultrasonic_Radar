@@ -3,9 +3,6 @@
 
 #include "INCLUDES.h"
 
-extern volatile char holdingLastPressed;
-extern volatile bool hasButtonPressed; 
-
 void GPIOA_setup(void);
 
 void initUART(void);

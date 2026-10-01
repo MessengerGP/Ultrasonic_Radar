@@ -1,10 +1,5 @@
 #include "INCLUDES.h"
 
-volatile uint16_t potValue = 0;
-volatile uint16_t joyX = 0;					//AIN1, PE2 
-volatile uint16_t joyY = 0;					//AIN2, PE1
-volatile bool adcReady = false;
-
 void GPIOE_setup(void)
 {
 	SYSCTL -> RCGCGPIO |= (1 << 4); 
