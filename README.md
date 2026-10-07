@@ -1,13 +1,17 @@
                                                       EMBEDDED RADAR PROJECT
-*(video presentation of project inside projectVideos Folder)*
-
 
 An ultrasonic radar built for 2303ENG Embedded Systems on the TM4C1294NCPDT
-LaunchPad, written in Embedded C. An SG90 servo sweeps an SRF05 ultrasonic sensor, 
-and a 2.8" ILI9341 LCD shows a live sonar map with a moving sweep line, detected objects 
-and a range gauge. It has three modes: IDLE, AUTO (sweeps between adjustable min/max angles) 
-and MANUAL (aims with a potentiometer or joystick). It's controlled from a UART terminal or a 
-Funduino joystick shield. Every peripheral is interrupt-driven (UART, GPIO buttons, ADC, timer 
+LaunchPad and written in Embedded C. 
+An SG90 servo sweeps an SRF05 ultrasonic sensor, and a 2.8" ILI9341 LCD shows a live sonar map with a moving sweep line, detected objects and a range gauge. 
+
+
+The Radar has three modes:
+
+   -  IDLE 
+   -  AUTO (sweeps between adjustable min/max angles) 
+   -  MANUAL (aims with a potentiometer or joystick) 
+
+It's controlled from a UART terminal or a Funduino joystick shield. Every peripheral is interrupt-driven (UART, GPIO buttons, ADC, timer 
 input capture, SysTick), and the code is split into separate modules for each part of the system.
 
                                                           Hardware used
