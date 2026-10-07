@@ -1,4 +1,5 @@
-**********EMBEDDED RADAR PROJECT**********
+                                                      EMBEDDED RADAR PROJECT
+*(video presentation of project inside projectVideos Folder)*
 
 
 An ultrasonic radar built for 2303ENG Embedded Systems on the TM4C1294NCPDT
@@ -9,7 +10,7 @@ and MANUAL (aims with a potentiometer or joystick). It's controlled from a UART 
 Funduino joystick shield. Every peripheral is interrupt-driven (UART, GPIO buttons, ADC, timer 
 input capture, SysTick), and the code is split into separate modules for each part of the system.
 
- ***Hardware used***
+                                                          Hardware used
  - **TM4C1294NCPDT LaunchPad (EK-TM4C1294XL):** the microcontroller that runs everything, at 16 MHz.
  - **SG90 servo:** rotates the sensor from 0° to 180°, driven by a 50 Hz PWM signal.
  - **SRF05 ultrasonic sensor:** measures distance to objects by timing the echo pulse.
@@ -21,13 +22,14 @@ input capture, SysTick), and the code is split into separate modules for each pa
  - **1 kΩ and 2 kΩ resistors:** a voltage divider on the SRF05's echo output, to drop its 5 V signal to about 3.3 V so it's safe for the Tiva's input pin.
 
 
-***BOARD***
+
+                                                             BOARD
 
 <img width="949" height="673" alt="image" src="https://github.com/user-attachments/assets/ae44d61d-28d9-43b9-9cea-33b9b97d4f27" />
 
 
 
-***DISTANCE VERIFICATION***
+                                                       DISTANCE VERIFICATION
 
 <img width="766" height="807" alt="Screenshot 2026-10-06 153118" src="https://github.com/user-attachments/assets/8ce884f4-c18f-44ad-ac09-5287e1133cde" />
 <img width="760" height="1136" alt="Screenshot 2026-10-06 153104" src="https://github.com/user-attachments/assets/d82df6f2-ad89-4ffe-9c48-90898317b6a8" />
@@ -35,7 +37,7 @@ input capture, SysTick), and the code is split into separate modules for each pa
 
 
 
-***ERRORS***
+                                                              ERRORS
 
 <img width="769" height="486" alt="Screenshot 2026-10-06 153435" src="https://github.com/user-attachments/assets/3b30dec2-164a-40aa-959e-8b614ed6ad41" />
 <img width="742" height="469" alt="Screenshot 2026-10-06 153420" src="https://github.com/user-attachments/assets/f4408786-4e6b-463d-b9c5-a8e00d02f5d5" />
@@ -44,7 +46,7 @@ input capture, SysTick), and the code is split into separate modules for each pa
 
 
 
-***EXTRA IMAGES***
+                                                           EXTRA IMAGES
 
 <img width="590" height="1278" alt="IMG_5103" src="https://github.com/user-attachments/assets/450479bb-3c09-4426-8a2a-d6c007126e5f" />
 <img width="590" height="1278" alt="IMG_5106" src="https://github.com/user-attachments/assets/9c4175cc-d992-4432-b309-73ba9eda06ff" />
